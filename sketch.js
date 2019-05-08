@@ -6,18 +6,29 @@ let verboseContentUrl = 'https://en.wikipedia.org/w/api.php?action=parse&format=
 let userInput;
 let index = 0;
 
-function setup() {
-  noCanvas();
-  userInput = select('#userinput');
-  userInput.changed(goWiki);
-
-  function goWiki() {
-    let term = userInput.value();
-    let url = searchUrl + term;
-    loadJSON(url, gotData, 'jsonp');
+window.onload = function() {
+  document.getElementById('userinput').onkeydown = function() {
+    if (event.keyCode == 13) {
+      goWiki();
+    }
   }
 
-  function gotData(data) {
+  function goWiki() {
+    let term = document.getElementById('userinput').value;
+    let url = searchUrl + term;
+    /*let htitle = data[1][index];
+    let title = data[1][index];*/
+    /*title = title.replace(/\s+/g, '%20');
+    htitle = htitle.replace('%20', ' ');*/
+    var human_title = document.createElement("p");
+    var text = document.createTextNode(/*htitle*/"test");
+    human_title.appendChild(text);
+    var element = document.getElementById("div1");
+    element.appendChild(human_title);
+    //loadJSON(url, gotData, 'jsonp');
+  }
+
+  /*function gotData(data) {
     console.log(data);
     let htitle = data[1][index];
     let title = data[1][index];
@@ -39,7 +50,7 @@ function setup() {
   	let pageId = Object.keys(data.query.pages)[0];
   	console.log(pageId);
   	let content = page[pageId].extract/*revisions[0]['*']*/;
-  	console.log(content);
+  	/*console.log(content);
   	createP(content);
   	createP('<hr>');
   }
@@ -48,5 +59,5 @@ function setup() {
   	let page = data.parse.text['*'];
   	createP(page);
   	createP('<hr>');
-  }
+  }*/
 }
