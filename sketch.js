@@ -6,29 +6,52 @@ let verboseContentUrl = 'https://en.wikipedia.org/w/api.php?action=parse&format=
 let userInput;
 let index = 0;
 
-window.onload = function() {
+/*window.onload = function() {
+  let term = document.getElementById('userinput').value;
+  let url = searchUrl + term;
   document.getElementById('userinput').onkeydown = function() {
     if (event.keyCode == 13) {
       goWiki();
     }
+  }*/
+function setup() {
+  noCanvas();
+  userInput = select('#userinput');
+  userInput.changed(goWiki);
+
+  function load_jsonp() {
+    _validateParameters();
   }
 
   function goWiki() {
     let term = document.getElementById('userinput').value;
     let url = searchUrl + term;
     /*let htitle = data[1][index];
-    let title = data[1][index];*/
-    /*title = title.replace(/\s+/g, '%20');
+    let title = data[1][index];
+    title = title.replace(/\s+/g, '%20');
     htitle = htitle.replace('%20', ' ');*/
-    var human_title = document.createElement("p");
-    var text = document.createTextNode(/*htitle*/"test");
+    /*var human_title = document.createElement("p");
+    var text = document.createTextNode(/*htitle"test");
     human_title.appendChild(text);
     var element = document.getElementById("div1");
-    element.appendChild(human_title);
-    //loadJSON(url, gotData, 'jsonp');
+    element.appendChild(human_title);*/
+    //loadJSON();
+    loadJSON(url, gotData, 'jsonp');
   }
 
-  /*function gotData(data) {
+  /*function loadJSON(callback) {
+    var xobj = new XMLHttpRequest();
+    xobj.overrideMimeType("application/json");
+    xobj.open('GET', url, true);
+    xobj.onreadystatechange = function () {
+      if (xobj.readyState == 4 && xobj.status == "200") {
+        callback(xobj.responseText);
+      }
+    };
+    xobj.send(null);
+  }*/
+
+  function gotData(data) {
     console.log(data);
     let htitle = data[1][index];
     let title = data[1][index];
@@ -50,7 +73,7 @@ window.onload = function() {
   	let pageId = Object.keys(data.query.pages)[0];
   	console.log(pageId);
   	let content = page[pageId].extract/*revisions[0]['*']*/;
-  	/*console.log(content);
+  	console.log(content);
   	createP(content);
   	createP('<hr>');
   }
@@ -59,5 +82,5 @@ window.onload = function() {
   	let page = data.parse.text['*'];
   	createP(page);
   	createP('<hr>');
-  }*/
+  }
 }

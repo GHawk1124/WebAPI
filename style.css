@@ -1,0 +1,22 @@
+#mtitle {
+  background-color: #3a84fc;
+}
+
+h2 {
+  margin-left: 1000;
+}
+
+p {
+  margin-left: 10000;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 200px;
+  background-color: #3a84fc;
+  display: block;
+  color: #000;
+  text-decoration: none;
+}
