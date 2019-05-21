@@ -13,25 +13,31 @@
   <script type="text/javascript" src="release.js"></script>
 
 </head>
+<div class="main" id="content">
 
-<body>
-  <div id="mtitle">
-  <center>
-  <h2>API Info Gatherer</h2>
-  <p>
-    Word: <input id="userinput" />
-    Verbose: <input type="checkbox" id="verbose" />
-    <input name="Refresh" type="button" onClick="window.location.reload()" />
-  </p>
-  </center>
-  </div>
-  <ul>
-    <li><center><b>API's In Use</b></center></li>
-    <li>Wikipedia<input type="checkbox" id="Wikipedia" /></li>
-    <li>Wolfram Alpha<input type="checkbox" id="WolframAlpha" /></li>
-    <li>YahooFinance<input type="checkbox" id="YahooFinance" /></li>
-  </ul>
-  <div id="div1"></div>
-</body>
+  <body>
+    <div id="mtitle">
+      <center>
+        <h2>API Info Gatherer</h2>
+        <p>
+          <input id="userinput" placeholder="Search"/>
+          <!-- Verbose: <input type="checkbox" id="verbose" /> -->
+          <!-- <input name="Refresh" type="button" onClick="window.location.reload()" /> -->
+        </p>
+      </center>
+    </div>
+    <div class="sidenav">
+      <ul id="nav">
+        <li>
+          <center><b>API's In Use</b></center>
+        </li>
+        <li>Wikipedia<input type="checkbox" id="Wikipedia" /></li>
+        <li>Wolfram Alpha<input type="checkbox" id="WolframAlpha" /></li>
+        <li>YahooFinance<input type="checkbox" id="YahooFinance" /></li>
+      </ul>
+    </div>
+    <div id="div1"></div>
+  </body>
+</div>
 
 </html>

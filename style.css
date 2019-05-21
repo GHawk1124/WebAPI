@@ -1,20 +1,58 @@
+.main {
+  margin-left: 160px; /* Same as the width of the sidebar */
+  padding: 0px 10px;
+}
+
 #mtitle {
   background-color: #3a84fc;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+#userinput{
+    border: none;
+    padding: 10px;
+    margin: 10px;
+    height: 20px;
+    width: 500px;
+    border:1px solid #eaeaea;
+    outline: none;
+    display: flex;
+    align-items: center;
+    border-radius: 20px;
+    flex: 1 1 auto;
+}
+#userinput:hover{
+    border-color: #a0a0a0 #b9b9b9 #b9b9b9 #b9b9b9;
+}
+#userinput:focus{
+    border-color:#4d90fe;
+}
+
+.sidenav {
+  height: 100%;
+  width: 160px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #3a84fc;
+  overflow-x: hidden;
+  text-align: right;
 }
 
 h2 {
-  margin-left: 1000;
+  /* margin-left: 1000; */
 }
 
 p {
   margin-left: 10000;
 }
 
-ul {
+#nav {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  width: 200px;
   background-color: #3a84fc;
   display: block;
   color: #000;

@@ -5,12 +5,20 @@ let userInput;
 let index = 0;
 
 function setup() {
+  "use strict";
   noCanvas();
-  userInput = select('#userinput');
-  userInput.changed(checkMethod);
+  document.getElementById('userinput').onkeydown = function(event) {
+    if (event.keyCode == 13) {
+      checkMethod()
+    }
+  }
   document.getElementById('Wikipedia').checked = true;
 
   function checkMethod() {
+    let myNode = document.getElementById("div1");
+    while (myNode.firstChild) {
+      myNode.removeChild(myNode.firstChild);
+    }
     if (document.getElementById('Wikipedia').checked) {
       goWiki();
     }
@@ -22,6 +30,10 @@ function setup() {
     }
   }
 
+  function createContentMain(location, info) {
+    document.getElementById(location).insertAdjacentHTML("beforeend", info);
+  }
+
   function goWiki() {
     let term = document.getElementById('userinput').value;
     let url = searchUrl + term;
@@ -29,19 +41,15 @@ function setup() {
 
     function wikiGotData(data) {
       console.log(data);
-      let htitle = data[1][index];
       let title = data[1][index];
       title = title.replace(/\s+/g, '%20');
-      htitle = htitle.replace('%20', ' ');
-      createP(htitle);
-      console.log(title);
       let searchData = contentUrl + title;
       let verboseSearchData = verboseContentUrl + title;
-      if (document.getElementById('verbose').checked) {
-        loadJSON(verboseSearchData, wikiVerboseResults, 'jsonp');
-      } else {
-        loadJSON(searchData, wikiResults, 'jsonp');
-      }
+      // if (document.getElementById('verbose').checked) {
+      //   loadJSON(verboseSearchData, wikiVerboseResults, 'jsonp');
+      // } else {
+      loadJSON(searchData, wikiResults, 'jsonp');
+      //}
     }
 
     function wikiResults(data) {
@@ -50,8 +58,8 @@ function setup() {
       console.log(pageId);
       let content = page[pageId].extract;
       console.log(content);
-      createP(content);
-      createP('<hr>');
+      createContentMain("div1", content);
+      createContentMain("div1", '<hr>');
     }
 
     function wikiVerboseResults(data) {
