@@ -1,13 +1,84 @@
+let searchUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=';
+let contentUrl = 'https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=&titles=';
+let verboseContentUrl = 'https://en.wikipedia.org/w/api.php?action=parse&format=json&page=';
+let userInput;
+let index = 0;
+
+let appId = '5GAEVG-LQJ8HVWYXT';
+
+const WolframAlphaAPI = require('wolfram-alpha-api');
+const waApi = WolframAlphaAPI(appId);
+
+window.onload = function() {
+  "use strict";
+  document.getElementById('userinput').onkeydown = function(event) {
+    if (event.keyCode == 13) {
+      checkMethod();
+    }
+  }
+  document.getElementById('Wikipedia').checked = true;
+
+  function checkMethod() {
+    let myNode = document.getElementById("div1");
+    while (myNode.firstChild) {
+      myNode.removeChild(myNode.firstChild);
+    }
+    if (document.getElementById('Wikipedia').checked) {
+      goWiki();
+    }
+    if (document.getElementById('WolframAlpha').checked) {
+      goAlpha();
+    }
+    if (document.getElementById('YahooFinance').checked) {
+      return 0;
+    }
+  }
+
+  function createContentMain(location, info) {
+    document.getElementById(location).insertAdjacentHTML("beforeend", info);
+  }
+
+  function goAlpha() {
+    let term = document.getElementById('userinput').value;
+    //waApi.get(term).then(console.log).catch(console.error);
+    waApi.getSimple(term).then((url) => {
+      createContentMain("div1", `<img src="${url}">`)
+    }).catch(console.error);
+  }
+
+  function goWiki() {
+    let term = document.getElementById('userinput').value;
+    let url = searchUrl + term;
+    loadJSON(url, wikiGotData, 'jsonp');
+
+    function wikiGotData(data) {
+      console.log(data);
+      let title = data[1][index];
+      title = title.replace(/\s+/g, '%20');
+      let searchData = contentUrl + title;
+      let verboseSearchData = verboseContentUrl + title;
+      loadJSON(searchData, wikiResults, 'jsonp');
+    }
+
+    function wikiResults(data) {
+      let page = data.query.pages;
+      let pageId = Object.keys(data.query.pages)[0];
+      console.log(pageId);
+      let content = page[pageId].extract;
+      createContentMain("div1", content);
+      createContentMain("div1", '<hr>');
+    }
+  }
+}
+
+// Code Taken From p5.js Library (modified to fit needs of project)
 loadJSON = function() {
   var path = arguments[0];
   var callback;
   var errorCallback;
   var options;
-
-  var ret = {}; // object needed for preload
+  var ret = {};
   var t = 'json';
-
-  // check for explicit data type argument
   for (var i = 1; i < arguments.length; i++) {
     var arg = arguments[i];
     if (typeof arg === 'string') {
@@ -26,15 +97,14 @@ loadJSON = function() {
     }
   }
 
-httpDo(path, 'GET', options, t,
-  function(resp) {
-    for (var k in resp) {
-      ret[k] = resp[k];
-    }
-    if (typeof callback !== 'undefined') {
-      callback(resp);
-    }
-      self._decrementPreload();
+  httpDo(path, 'GET', options, t,
+    function(resp) {
+      for (var k in resp) {
+        ret[k] = resp[k];
+      }
+      if (typeof callback !== 'undefined') {
+        callback(resp);
+      }
     },
     function(err) {
       return 0
@@ -52,7 +122,6 @@ httpDo = function() {
   var jsonpOptions = {};
   var cbCount = 0;
   var contentType = 'text/plain';
-  // Trim the callbacks off the end to get an idea of how many arguments are passed
   for (var i = arguments.length - 1; i > 0; i--) {
     if (typeof arguments[i] === 'function') {
       cbCount++;
@@ -60,7 +129,6 @@ httpDo = function() {
       break;
     }
   }
-  // The number of arguments minus callbacks
   var argsCount = arguments.length - cbCount;
   var path = arguments[0];
   if (
@@ -68,15 +136,12 @@ httpDo = function() {
     typeof path === 'string' &&
     typeof arguments[1] === 'object'
   ) {
-    // Intended for more advanced use, pass in Request parameters directly
     request = new Request(path, arguments[1]);
     callback = arguments[2];
     errorCallback = arguments[3];
   } else {
-    // Provided with arguments
     var method = 'GET';
     var data;
-
     for (var j = 1; j < arguments.length; j++) {
       var a = arguments[j];
       if (typeof a === 'string') {
@@ -191,11 +256,11 @@ function fetchJsonp(_url) {
 
   var timeoutId = undefined;
 
-  return new Promise(function (resolve, reject) {
+  return new Promise(function(resolve, reject) {
     var callbackFunction = options.jsonpCallbackFunction || generateCallbackFunction();
     var scriptId = jsonpCallback + '_' + callbackFunction;
 
-    window[callbackFunction] = function (response) {
+    window[callbackFunction] = function(response) {
       resolve({
         ok: true,
         // keep consistent with fetch API
@@ -210,10 +275,7 @@ function fetchJsonp(_url) {
 
       clearFunction(callbackFunction);
     };
-
-    // Check if the user set their own params, and if not add a ? to start a list of params
     url += url.indexOf('?') === -1 ? '?' : '&';
-
     var jsonpScript = document.createElement('script');
     jsonpScript.setAttribute('src', '' + url + jsonpCallback + '=' + callbackFunction);
     if (options.charset) {
@@ -222,20 +284,16 @@ function fetchJsonp(_url) {
     jsonpScript.id = scriptId;
     document.getElementsByTagName('head')[0].appendChild(jsonpScript);
 
-    timeoutId = setTimeout(function () {
+    timeoutId = setTimeout(function() {
       reject(new Error('JSONP request to ' + _url + ' timed out'));
-
       clearFunction(callbackFunction);
       removeScript(scriptId);
-      window[callbackFunction] = function () {
+      window[callbackFunction] = function() {
         clearFunction(callbackFunction);
       };
     }, timeout);
-
-    // Caught if got 404/500
-    jsonpScript.onerror = function () {
+    jsonpScript.onerror = function() {
       reject(new Error('JSONP request to ' + _url + ' failed'));
-
       clearFunction(callbackFunction);
       removeScript(scriptId);
       if (timeoutId) clearTimeout(timeoutId);
@@ -261,16 +319,14 @@ function removeScript(scriptId) {
 }
 
 _decrementPreload = function() {
-    var context = _isGlobal ? window : this;
-    if (typeof context.preload === 'function') {
-      context._setProperty('_preloadCount', context._preloadCount - 1);
-      context._runIfPreloadsAreDone();
-    }
-  };
+  var context = _isGlobal ? window : this;
+  if (typeof context.preload === 'function') {
+    context._setProperty('_preloadCount', context._preloadCount - 1);
+    context._runIfPreloadsAreDone();
+  }
+};
 
 function clearFunction(functionName) {
-  // IE8 throws an exception when you try to delete a property on window
-  // http://stackoverflow.com/a/1824228/751089
   try {
     delete window[functionName];
   } catch (e) {

@@ -6,7 +6,7 @@ let index = 0;
 
 function setup() {
   "use strict";
-  noCanvas();
+  p5.noCanvas();
   document.getElementById('userinput').onkeydown = function(event) {
     if (event.keyCode == 13) {
       checkMethod()
@@ -57,15 +57,15 @@ function setup() {
       let pageId = Object.keys(data.query.pages)[0];
       console.log(pageId);
       let content = page[pageId].extract;
-      console.log(content);
+      //console.log(content);
       createContentMain("div1", content);
       createContentMain("div1", '<hr>');
     }
 
-    function wikiVerboseResults(data) {
-      let page = data.parse.text['*'];
-      createP(page);
-      createP('<hr>');
-    }
+    // function wikiVerboseResults(data) {
+    //   let page = data.parse.text['*'];
+    //   createP(page);
+    //   createP('<hr>');
+    // }
   }
 }
